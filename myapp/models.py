@@ -20,7 +20,7 @@ class Task(models.Model):
 class FormName(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField("表名", max_length=255)
-
+    days = models.IntegerField("工作日")
     def __str__(self):
         return "%s"%(self.name)
 
@@ -32,6 +32,7 @@ class info(models.Model):
     startTime = models.DateField("开始时间")
     endTime = models.DateField("结束时间")
     otherDepartement = models.CharField("承接部门", max_length=255, blank= True)
+    remark = models.CharField("备注", max_length=255, blank= True)
     wbsNb = models.ForeignKey('Task', on_delete=models.CASCADE,verbose_name="WBS编号")
     team = models.ForeignKey('Team', on_delete=models.CASCADE,verbose_name="团队")
     formName = models.ForeignKey('FormName', on_delete=models.CASCADE,verbose_name="表名")
