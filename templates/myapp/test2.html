@@ -67,8 +67,9 @@
                 <th>结束时间</th>
                 <th>人数</th>
                 <th>工时</th>
-                <th>操作</th>
                 <th>合计工时</th>
+                <th>备注</th>
+                <th>操作</th>
             </tr>
         </thead>
         <tbody>
@@ -96,12 +97,15 @@
             <td><input type="date" required id="end_date0" name="end_time"></td>
             <td><input type="number" required id="peoplenb0" name="peoplenb"></td>
             <td><input type="number" required id="workhours0" name="workhours"></td>
-            <td><input type="button" name="delete"  value="删 除"  onclick="deleteSelectedRow(0)" /></td>
             <td><input type="number" disabled name="one_workhours" id="one_workhours0" /></td>
+            <td><input type="text"  id="remark0" name="remark"></td>
+            <td><input type="button" name="delete"  value="删 除"  onclick="deleteSelectedRow(0)" /></td>
+
+
         </tr>
 
         <tr>
-            <td align="center" colspan="13">
+            <td align="center" colspan="14">
                 <br />
                 <input type="button" name="insert"  value="增加一行"  onclick="insertNewRow()" />&nbsp&nbsp
                 <input type="button"  value=" 检查 "  onclick="GetValue()" />&nbsp&nbsp
@@ -182,6 +186,7 @@
     var Cell10 = "";
     var Cell11 = "";
     var Cell12 = "";
+    var Cell13 = "";
     //初始化第一行
     $(function() {
         //初始化第一行
@@ -196,13 +201,14 @@
         Cell9 = $("#row0 td:eq(8)").html();
         Cell10 = $("#row0 td:eq(9)").html();
         Cell11 = $("#row0 td:eq(10)").html();
-        Cell12 = $("#row0 td:eq(12)").html();
+        Cell12 = $("#row0 td:eq(11)").html();
+        Cell13 = $("#row0 td:eq(12)").html();
     });
     //-----------------新增一行-----------start---------------
     function insertNewRow() {
         var rowLength = $("#info_table tr").length;
         var rowId = "row" + flag;
-        var insertStr = "<tr id=" + rowId + ">" + "<td>" + Cell1 + "</td>"+ "<td>" + Cell2 + "</td>"+ "<td>" + Cell3 + "</td>"+ "<td>" + Cell4 + "</td>"+ "<td>" + Cell5 + "</td>"+ "<td>" + Cell6 + "</td>"+ "<td>" + Cell7 + "</td>"+ "<td>" + Cell8 + "</td>"+ "<td>" + Cell9 + "</td>"+ "<td>" + Cell10 + "</td>"+ "<td>" + Cell11 + "</td>"+ "<td><input type='button' name='delete' value='删除' onclick='deleteSelectedRow(\"" + rowId + "\")' />"+ "</td>" +"<td>" + Cell12 + "</td>" +"</tr>";
+        var insertStr = "<tr id=" + rowId + ">" + "<td>" + Cell1 + "</td>"+ "<td>" + Cell2 + "</td>"+ "<td>" + Cell3 + "</td>"+ "<td>" + Cell4 + "</td>"+ "<td>" + Cell5 + "</td>"+ "<td>" + Cell6 + "</td>"+ "<td>" + Cell7 + "</td>"+ "<td>" + Cell8 + "</td>"+ "<td>" + Cell9 + "</td>"+ "<td>" + Cell10 + "</td>"+ "<td>" + Cell11 + "</td>"+"<td>" + Cell12 + "</td>" +"<td>" + Cell13 + "</td>" + "<td><input type='button' name='delete' value='删除' onclick='deleteSelectedRow(\"" + rowId + "\")' />"+ "</td>"  + "</tr>";
         $("#info_table tr:eq(" + (rowLength - 2) + ")").after(insertStr);
         $("#" + rowId + " td:eq(0)").children().eq(0).attr("id", "nb" + flag);
         $("#" + rowId + " td:eq(1)").children().eq(0).attr("id", "projecttype" + flag);
@@ -215,7 +221,8 @@
         $("#" + rowId + " td:eq(8)").children().eq(0).attr("id", "end_time" + flag);
         $("#" + rowId + " td:eq(9)").children().eq(0).attr("id", "peoplenb" + flag);
         $("#" + rowId + " td:eq(10)").children().eq(0).attr("id", "workhours" + flag);
-        $("#" + rowId + " td:eq(12)").children().eq(0).attr("id", "one_workhours" + flag);
+        $("#" + rowId + " td:eq(11)").children().eq(0).attr("id", "one_workhours" + flag);
+        $("#" + rowId + " td:eq(12)").children().eq(0).attr("id", "remark" + flag);
         flag++;
     }
     //-----------------删除一行，根据行ID删除-start--------
@@ -231,7 +238,8 @@
         $("#info_table tr").each(function (i) {
             if (i >= 1) {
                 $(this).children().each(function (j) {
-                    if ($("#info_table tr").eq(i).children().length - 1 != j) {
+
+                    if ($("#info_table tr").eq(i).children().length -1 != j) {
                         value += $(this).children().eq(0).val() + "," //获取每个单元格里的第一个控件的值
                         if ($(this).children().length > 1) {
                             value += $(this).children().eq(1).val() + "," //如果单元格里有两个控件，获取第二个控件的值
@@ -243,8 +251,9 @@
         });
         value = value.substr(0, value.length);
         submit_data = value
+        //alert(value)
 
-        //-------------------计算总表单中的人工时和人均人工时-----------------------------
+        //-------------------计算表单中的总人工时和人均人工时-----------------------------
         var temp;
         var total_workhours =0;
         temp = submit_data.split("#");

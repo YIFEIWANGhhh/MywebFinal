@@ -171,7 +171,8 @@ def uploadtest2(request):
         data_clean.pop()
         for i in data_clean:
             j = i.split(',')
-            #print(j)
+            print(j)
+            remark = j[12]
             peoplenb = j[9]
             workhours = j[10]
             start_time = j[7]
@@ -183,8 +184,8 @@ def uploadtest2(request):
             projecttype = j[1]
             team = j[2]
             formname = j[0]
-            print(projecttype,team,wbs,otherdepartement,description,content,start_time,end_time,peoplenb,workhours)
-            insert_info(team,formname,wbs,peoplenb,workhours,start_time,end_time,content,otherdepartement)
+            #print(projecttype,team,wbs,otherdepartement,description,content,start_time,end_time,peoplenb,workhours,remark)
+            insert_info(team,formname,wbs,peoplenb,workhours,start_time,end_time,content,otherdepartement,remark)
     return render(request,'myapp/test2.html')
 
 
@@ -203,10 +204,11 @@ def uploadtest2(request):
     end_time:   date
     content:    str
     otherdepartement:   str
+    remark: str
     Returns:
 """
 def insert_info(team,formname,wbs,peoplenb,workhours,start_time,end_time,
-                content,otherdepartement):
+                content,otherdepartement,remark):
     mod = info()
     mod.workHours= workhours
     mod.peopleNb = peoplenb
@@ -214,6 +216,7 @@ def insert_info(team,formname,wbs,peoplenb,workhours,start_time,end_time,
     mod.otherDepartement= otherdepartement
     mod.startTime = start_time
     mod.endTime = end_time
+    mod.remark = remark
     t = Team.objects.get(name=team)
     mod.team = t
     f = FormName.objects.get(name=formname)
