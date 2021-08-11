@@ -20,7 +20,7 @@ class Task(models.Model):
 class FormName(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField("表名", max_length=255)
-
+    workdays = models.IntegerField("工作日")
     def __str__(self):
         return "%s"%(self.name)
 
