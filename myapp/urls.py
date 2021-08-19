@@ -16,4 +16,9 @@ urlpatterns = [
     path('test/', views.test),
     path('test2/', views.test2),
     path('uploadtest2/', views.uploadtest2, name='uploadtest2'),
+
+
+    path('edit/<str:info_id>', views.edit, name='edit'),
+
+
 ]

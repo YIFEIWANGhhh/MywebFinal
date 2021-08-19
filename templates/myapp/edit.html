@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>修改</title>
+</head>
+<body>
+<form  method="post">
+    {% csrf_token %}
+    <input type="hidden" name="id" value="{{info.id}}">
+    <input type="hidden" name="formName" value="{{info.formName.name}}">
+    <input type="hidden" name="team" value="{{info.team.name}}">
+    <table width="280" border="0">
+        <tr>
+            <td>WBS编号: </td>
+            <td><input disabled type="text" name="wbsnb" value="{{info.wbsNb.wbsNb}}"/></td>
+        </tr>
+        <tr>
+            <td>任务描述: </td>
+            <td><input disabled type="text" name="description" value="{{info.wbsNb.description}}"/></td>
+        </tr>
+        <tr>
+            <td>委托部门: </td>
+            <td><input type="text" name="otherdepartement" value="{{info.otherDepartement}}"/></td>
+        </tr>
+        <tr>
+            <td>开始时间: </td>
+            <td><input type="text" name="starttime" value="{{info.startTime}}"/></td>
+        </tr>
+        <tr>
+            <td>结束时间: </td>
+            <td><input type="text" name="endtime" value="{{info.endTime}}"/></td>
+        </tr>
+        <tr>
+            <td>人数：</td>
+            <td><input type="number" name="peoplenb" value="{{info.peopleNb}}"/></td>
+        </tr>
+        <tr>
+            <td>工时：</td>
+            <td><input type="number" name="workhours" value="{{info.workHours}}"/></td>
+        </tr>
+        <tr>
+            <td>任务说明：  </td>
+            <td><input type="text" name="taskdescription" value="{{info.taskDescription}}"/></td>
+        </tr>
+        <tr>
+            <td>备注：</td>
+            <td><input type="text" name="remark" value="{{info.remark}}"/></td>
+        </tr>
+
+        <tr>
+            <td colspan="2" align="center">
+                <input type="submit" value="修改"/>
+                <input type="reset" value="重置"/>
+            </td>
+        </tr>
+    </table>
+</form>
+
+</body>
+</html>

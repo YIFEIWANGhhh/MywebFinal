@@ -93,7 +93,9 @@ def get_info(request, tablename):
     mylist = []
     for ob in dlist:
         mylist.append({'id': ob.id,'peopleNb':ob.peopleNb,'workhours':ob.workHours,
-                       'team':ob.team.name})
+                       'team':ob.team.name, 'taskdescription':ob.taskDescription, 'starttime':ob.startTime,
+                       'endtime':ob.endTime,'otherdepartement':ob.otherDepartement,'remark':ob.remark,'wbsNb':ob.wbsNb.wbsNb,
+                       'description': ob.wbsNb.description,'projecttype':ob.wbsNb.projectType})
     return JsonResponse({'data': mylist})
 
 
@@ -224,3 +226,8 @@ def insert_info(team,formname,wbs,peoplenb,workhours,start_time,end_time,
     w = Task.objects.get(wbsNb=wbs)
     mod.wbsNb = w
     mod.save()
+
+def edit(request, info_id):
+    ob = info.objects.get(id=info_id)
+    context = {"info": ob}
+    return render(request, "myapp/edit.html", context)
