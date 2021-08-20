@@ -3,45 +3,103 @@
 <head>
     <meta charset="UTF-8">
     <title>修改</title>
+    <link href="/static/bootstrap-table.css" rel="stylesheet">
+    <link href="/static/bootstrap.css" rel="stylesheet">
+    <script src="/static/jquery-1.8.2.min.js"></script>
+    <script src="/static/bootstrap.min.js"></script>
+    <script src="/static/bootstrap-table.js"></script>
+    <script src="/static/bootstrap-table-zh-CN.js"></script>
 </head>
 <body>
-<form  method="post">
+<form  method="post" action="{% url 'edit_upload' %}">
     {% csrf_token %}
-    <input type="hidden" name="id" value="{{info.id}}">
-    <input type="hidden" name="formName" value="{{info.formName.name}}">
-    <input type="hidden" name="team" value="{{info.team.name}}">
-    <table width="280" border="0">
+    <table class="table table-striped table-bordered table-hover">
+        <input type="hidden" name="id" value="{{info.id}}">
+        <tr>
+            <td>表名：</td>
+            <td>
+                <input  disabled type="text" name="formname" value="{{info.formName.name}}">
+            </td>
+        </tr>
+        <tr>
+            <td>型号：</td>
+            <td>
+                <input  disabled type="text" name="projecttype" value="{{info.wbsNb.projectType}}">
+            </td>
+        </tr>
+        <tr>
+            <td>团队：</td>
+            <td>
+                <input disabled type="text" name="team" value="{{info.team.name}}">
+            </td>
+        </tr>
         <tr>
             <td>WBS编号: </td>
             <td><input disabled type="text" name="wbsnb" value="{{info.wbsNb.wbsNb}}"/></td>
-        </tr>
-        <tr>
-            <td>任务描述: </td>
-            <td><input disabled type="text" name="description" value="{{info.wbsNb.description}}"/></td>
         </tr>
         <tr>
             <td>委托部门: </td>
             <td><input type="text" name="otherdepartement" value="{{info.otherDepartement}}"/></td>
         </tr>
         <tr>
-            <td>开始时间: </td>
-            <td><input type="text" name="starttime" value="{{info.startTime}}"/></td>
-        </tr>
-        <tr>
-            <td>结束时间: </td>
-            <td><input type="text" name="endtime" value="{{info.endTime}}"/></td>
-        </tr>
-        <tr>
-            <td>人数：</td>
-            <td><input type="number" name="peoplenb" value="{{info.peopleNb}}"/></td>
-        </tr>
-        <tr>
-            <td>工时：</td>
-            <td><input type="number" name="workhours" value="{{info.workHours}}"/></td>
+            <td>任务描述: </td>
+            <td><input disabled type="text" name="description" value="{{info.wbsNb.description}}"/></td>
         </tr>
         <tr>
             <td>任务说明：  </td>
             <td><input type="text" name="taskdescription" value="{{info.taskDescription}}"/></td>
+        </tr>
+        <tr>
+            <td>开始时间: </td>
+            <td><input required type="date" name="starttime" id="starttime0"/></td>
+            <script type="text/javascript" language='javascript'>
+                $(function (){
+                    var starttime = "{{info.startTime}}";
+                    var year = starttime.substring(0,4);
+                    var month = parseInt(starttime.substring(5,7).replace(/[^0-9]/ig,""));
+                    var day = parseInt(starttime.substring(starttime.length-3,starttime.length-1).replace(/[^0-9]/ig,""));
+                    var month2=month.toString();
+                    var day2=day.toString();
+                    if(month2.length == 1){
+                        month2 = "0"+month2;
+                    }
+                    if(day2.length == 1){
+                        day2 = "0"+day2;
+                    }
+                    var date = year+'-'+month2+'-'+day2;
+                    $('#starttime0').val(date);
+                })
+            </script>
+        </tr>
+        <tr>
+            <td>结束时间: </td>
+            <td><input required type="date" name="endtime" id="endtime0" value="{{info.endTime}}"/></td>
+            <script type="text/javascript" language='javascript'>
+                $(function (){
+                    var starttime = "{{info.endTime}}";
+                    var year = starttime.substring(0,4);
+                    var month = parseInt(starttime.substring(5,7).replace(/[^0-9]/ig,""));
+                    var day = parseInt(starttime.substring(starttime.length-3,starttime.length-1).replace(/[^0-9]/ig,""));
+                    var month2=month.toString();
+                    var day2=day.toString();
+                    if(month2.length == 1){
+                        month2 = "0"+month2;
+                    }
+                    if(day2.length == 1){
+                        day2 = "0"+day2;
+                    }
+                    var date = year+'-'+month2+'-'+day2;
+                    $('#endtime0').val(date);
+                })
+            </script>
+        </tr>
+        <tr>
+            <td>人数：</td>
+            <td><input required type="number" name="peoplenb" value="{{info.peopleNb}}"/></td>
+        </tr>
+        <tr>
+            <td>工时：</td>
+            <td><input required type="number" name="workhours" value="{{info.workHours}}"/></td>
         </tr>
         <tr>
             <td>备注：</td>
@@ -51,7 +109,6 @@
         <tr>
             <td colspan="2" align="center">
                 <input type="submit" value="修改"/>
-                <input type="reset" value="重置"/>
             </td>
         </tr>
     </table>

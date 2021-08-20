@@ -231,3 +231,18 @@ def edit(request, info_id):
     ob = info.objects.get(id=info_id)
     context = {"info": ob}
     return render(request, "myapp/edit.html", context)
+
+def edit_upload(request):
+    uid = request.POST['id']
+    ob = info.objects.get(id=uid)
+    ob.peopleNb = request.POST['peoplenb']
+    ob.workHours = request.POST['workhours']
+    ob.remark = request.POST['remark']
+    ob.otherDepartement = request.POST['otherdepartement']
+    ob.taskDescription = request.POST['taskdescription']
+    ob.startTime = request.POST['starttime']
+    ob.endTime = request.POST['endtime']
+    ob.save()
+    context = {"info":"edit success"}
+
+    return render(request,"myapp/test2.html",context)
