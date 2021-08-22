@@ -20,5 +20,6 @@ urlpatterns = [
 
     path('edit/<str:info_id>', views.edit, name='edit'),
     path('edit_upload/', views.edit_upload, name='edit_upload'),
+    path('edit_upload/return', views.editreturn, name='editreturn'),
 
 ]

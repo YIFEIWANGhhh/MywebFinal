@@ -106,7 +106,9 @@ def get_info(request, tablename):
 
 def test(request):
     return render(request,'myapp/test.html')
+
 def test2(request):
+    print("test2")
     return render(request,'myapp/test2.html')
 
 
@@ -230,19 +232,26 @@ def insert_info(team,formname,wbs,peoplenb,workhours,start_time,end_time,
 def edit(request, info_id):
     ob = info.objects.get(id=info_id)
     context = {"info": ob}
-    return render(request, "myapp/edit.html", context)
+    return render(request, 'myapp/edit.html', context)
 
 def edit_upload(request):
-    uid = request.POST['id']
-    ob = info.objects.get(id=uid)
-    ob.peopleNb = request.POST['peoplenb']
-    ob.workHours = request.POST['workhours']
-    ob.remark = request.POST['remark']
-    ob.otherDepartement = request.POST['otherdepartement']
-    ob.taskDescription = request.POST['taskdescription']
-    ob.startTime = request.POST['starttime']
-    ob.endTime = request.POST['endtime']
-    ob.save()
-    context = {"info":"edit success"}
+    try:
+        uid = request.POST['id']
+        ob = info.objects.get(id=uid)
+        ob.peopleNb = request.POST['peoplenb']
+        ob.workHours = request.POST['workhours']
+        ob.remark = request.POST['remark']
+        ob.otherDepartement = request.POST['otherdepartement']
+        ob.taskDescription = request.POST['taskdescription']
+        ob.startTime = request.POST['starttime']
+        ob.endTime = request.POST['endtime']
+        ob.save()
+        context = {"info":"edit success"}
+    except:
+        context = {"info": "edit fail"}
 
-    return render(request,"myapp/test2.html",context)
+    # return HttpResponseRedirect('return')
+    return render(request, 'myapp/test2.html', context)
+
+def editreturn(request):
+    return  render(request, 'myapp/test2.html')

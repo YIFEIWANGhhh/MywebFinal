@@ -95,18 +95,27 @@
         </thead>
         <tbody>
         <tr id="row0">
-            <td>
-                <select id="nb0" name="nb">
-                </select>
+<!--            <td>-->
+<!--                <select id="nb0" name="nb">-->
+<!--                </select>-->
 
+<!--            </td>-->
+            <td>
+                <input id="nb0" name="nb" type="text" disabled>
             </td>
             <td>
                 <input type="text" id="projecttype0" name="projecttype" disabled>
             </td>
+
+<!--            <td>-->
+<!--                <select id="team0" name="team">-->
+<!--                </select>-->
+<!--            </td>-->
             <td>
-                <select id="team0" name="team">
-                </select>
+                <input id="team0" name="team" type="text" disabled>
             </td>
+
+
             <td>
                 <select id="wbsNb0" name="wbsNb">
                 </select>
@@ -171,7 +180,7 @@
                 //alert(res);
                 list = res.data
                 for(var i = 0; i < list.length; i++){
-                    $("#team0").append("<option value='"+list[i].name+"'>"+list[i].name+"</option>");
+                    //$("#team0").append("<option value='"+list[i].name+"'>"+list[i].name+"</option>");
                     $("#team_name").append("<option value='"+list[i].name+"'>"+list[i].name+"</option>");
                 }
             },
@@ -200,7 +209,7 @@
                 //alert(res);
                 list = res.data
                 for(var i = 0; i < list.length; i++){
-                    $("#nb0").append("<option value='"+list[i].name+"'>"+list[i].name+"</option>");
+                    //$("#nb0").append("<option value='"+list[i].name+"'>"+list[i].name+"</option>");
                     $("#table_name").append("<option value='"+list[i].name+"'>"+list[i].name+"</option>");
                 }
             },
@@ -250,8 +259,14 @@
         var insertStr = "<tr id=" + rowId + ">" + "<td>" + Cell1 + "</td>"+ "<td>" + Cell2 + "</td>"+ "<td>" + Cell3 + "</td>"+ "<td>" + Cell4 + "</td>"+ "<td>" + Cell5 + "</td>"+ "<td>" + Cell6 + "</td>"+ "<td>" + Cell7 + "</td>"+ "<td>" + Cell8 + "</td>"+ "<td>" + Cell9 + "</td>"+ "<td>" + Cell10 + "</td>"+ "<td>" + Cell11 + "</td>"+"<td>" + Cell12 + "</td>" +"<td>" + Cell13 + "</td>" + "<td><input type='button' name='delete' value='删除' onclick='deleteSelectedRow(\"" + rowId + "\")' />"+ "</td>"  + "</tr>";
         $("#info_table tr:eq(" + (rowLength - 2) + ")").after(insertStr);
         $("#" + rowId + " td:eq(0)").children().eq(0).attr("id", "nb" + flag);
+        $("#" + rowId + " td:eq(0)").children().val($("#table_name").val());
+
+
         $("#" + rowId + " td:eq(1)").children().eq(0).attr("id", "projecttype" + flag);
+
         $("#" + rowId + " td:eq(2)").children().eq(0).attr("id", "team" + flag);
+        $("#" + rowId + " td:eq(2)").children().val($("#team_name").val());
+
         $("#" + rowId + " td:eq(3)").children().eq(0).attr("id", "wbsNb" + flag);
         $("#" + rowId + " td:eq(4)").children().eq(0).attr("id", "otherdepartement" + flag);
         $("#" + rowId + " td:eq(5)").children().eq(0).attr("id", "description" + flag);
@@ -333,6 +348,11 @@
     //-------------------获得指定表名的一些信息-----------------------------
     $("#table_name").live('change',function() {
         var tablename = $("#table_name").val();
+
+        //填充提交表单中的表名
+        $("[name='nb']").val(tablename);
+
+
         $.ajax({
             type:'get', //请求方式
             url: "/myapp/get_info/"+tablename, //请求地址
@@ -349,6 +369,10 @@
     $("#team_name").live('change',function() {
         //-------------------计算总人工时和人均人工时-----------------------------
         var teamname = $("#team_name").val();
+
+        //填充提交表单中的团队名
+        $("[name='team']").val(teamname);
+
         var al_total_workhours = 0;
         for(var i = 0; i < get_data.length; i++){
             if(teamname == get_data[i].team){
@@ -358,6 +382,8 @@
         $("#al_total_workhours").empty();
         $("#al_total_workhours").append(al_total_workhours);
         $("#al_avg_workhours").empty();
+
+
 
 
         $("#al_avg_workhours").append(al_total_workhours/8);
