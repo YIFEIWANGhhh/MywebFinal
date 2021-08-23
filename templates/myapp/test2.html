@@ -14,35 +14,41 @@
 
 
 
-<table class="table table-striped table-bordered table-hover" id="summary_table">
+<table  id="summary_table" class="table table-striped table-bordered table-hover">
     <thead>
-    <td>表名选择</td>
-    <td>
-        <select id="table_name">
-            <option>-请选择-</option>
-        </select>
-
-    </td>
-    <td>团队选择</td>
-    <td>
-        <select id="team_name">
-            <option>-请选择-</option>
-        </select>
-    </td>
     <tr>
-        <th>填报总工时</th>
-        <th>填报人均人工时</th>
-        <th>已经填报总工时</th>
-        <th>已经填报人均总工时</th>
+        <td colspan="1">表名选择</td>
+        <td colspan="2">
+            <select id="table_name">
+                <option>-请选择-</option>
+            </select>
+
+        </td>
+        <td colspan="1">团队选择</td>
+        <td colspan="2">
+            <select id="team_name">
+                <option>-请选择-</option>
+            </select>
+        </td>
+        <td colspan="1">额定工作日</td>
+        <td colspan="2"><input disabled type="number" id="workdays" name="workdays" value="0"></td>
+        <td colspan="1">团队人数</td>
+        <td colspan="2"><input disabled type="number" id="team_peoplenb" name="team_peoplenb" value="0"></td>
     </tr>
 
+    <tr colspan="12">
+        <th colspan="3">填报总工时</th>
+        <th colspan="3">填报人均人工时</th>
+        <th colspan="3">已经填报总工时</th>
+        <th colspan="3">已经填报人均总工时</th>
+    </tr>
     </thead>
     <tbody>
     <tr>
-        <td id="total_workhours"></td>
-        <td id="avg_workhours"></td>
-        <td id="al_total_workhours"></td>
-        <td id="al_avg_workhours"></td>
+        <td id="total_workhours" colspan="3"></td>
+        <td id="avg_workhours" colspan="3"></td>
+        <td id="al_total_workhours" colspan="3"></td>
+        <td id="al_avg_workhours" colspan="3"></td>
     </tr>
 
     </tbody>
@@ -167,7 +173,9 @@
 </form>
 
 <script type="text/javascript" language='javascript'>
-
+    //声明全局变量
+    var formname_data;
+    var team_data;
     $(function(){
         //-----------------获取团队名-------------------------------
         $.ajax({
@@ -178,7 +186,8 @@
             success: function(res){   //请求成功后返回（响应）的回调函数
                 //alert(res['data'][0]['name']);
                 //alert(res);
-                list = res.data
+                list = res.data;
+                team_data = list;
                 for(var i = 0; i < list.length; i++){
                     //$("#team0").append("<option value='"+list[i].name+"'>"+list[i].name+"</option>");
                     $("#team_name").append("<option value='"+list[i].name+"'>"+list[i].name+"</option>");
@@ -208,6 +217,7 @@
                 //alert(res['data'][0]['name']);
                 //alert(res);
                 list = res.data
+                formname_data = list
                 for(var i = 0; i < list.length; i++){
                     //$("#nb0").append("<option value='"+list[i].name+"'>"+list[i].name+"</option>");
                     $("#table_name").append("<option value='"+list[i].name+"'>"+list[i].name+"</option>");
@@ -218,6 +228,7 @@
 
     //声明全局变量
     var formvalue = "";
+
     var get_data;
     var submit_data;
     var flag = 1;
@@ -352,7 +363,15 @@
         //填充提交表单中的表名
         $("[name='nb']").val(tablename);
 
+        //填充额定工作日
+        for(var i = 0; i < formname_data.length; i++){
+            if (formname_data[i].name == tablename){
+                $("#workdays").empty();
+                $("#workdays").val(formname_data[i].workdays);
+            }
+        }
 
+        //获得当前表下的所有信息
         $.ajax({
             type:'get', //请求方式
             url: "/myapp/get_info/"+tablename, //请求地址
@@ -373,6 +392,15 @@
         //填充提交表单中的团队名
         $("[name='team']").val(teamname);
 
+        //填充团队人数
+        for(var i = 0; i < team_data.length; i++){
+            if (team_data[i].name == teamname){
+                $("#team_peoplenb").empty();
+                $("#team_peoplenb").val(team_data[i].peoplenb);
+            }
+        }
+
+        //计算总人工时
         var al_total_workhours = 0;
         for(var i = 0; i < get_data.length; i++){
             if(teamname == get_data[i].team){
@@ -381,6 +409,8 @@
         };
         $("#al_total_workhours").empty();
         $("#al_total_workhours").append(al_total_workhours);
+
+        //计算人均工时
         $("#al_avg_workhours").empty();
 
 

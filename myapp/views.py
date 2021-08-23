@@ -25,7 +25,7 @@ def team(request):
     dlist = Team.objects.all()
     mylist = []
     for ob in dlist:
-        mylist.append({'id': ob.id,'name':ob.name})
+        mylist.append({'id': ob.id,'name':ob.name,'peoplenb':ob.peopleNb})
     return JsonResponse({'data': mylist})
 
 
@@ -59,7 +59,7 @@ def formname(request):
     dlist = FormName.objects.all()
     mylist = []
     for ob in dlist:
-        mylist.append({'id': ob.id,'name':ob.name})
+        mylist.append({'id': ob.id,'name':ob.name,'workdays':ob.workdays})
     return JsonResponse({'data': mylist})
 
 
