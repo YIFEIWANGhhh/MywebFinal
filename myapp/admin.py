@@ -7,7 +7,7 @@ from myapp.models import Team, FormName, Task, info
 # Register your models here.
 class TeamAdmin(admin.ModelAdmin):
     #listdisplay设置要显示在列表中的字段（id字段是Django模型的默认主键）
-    list_display = ('id','name', 'peopleNb')
+    list_display = ('id','name','peopleNb')
     #list_per_page设置每页显示多少条记录，默认是100条
     list_per_page = 10
     #ordering设置默认排序字段，负号表示降序排序
@@ -38,7 +38,7 @@ class infoAdmin(admin.ModelAdmin):
     list_display = (
     'get_projecttype','get_wbsnb','otherDepartement','get_description','taskDescription','startTime',
     'endTime','peopleNb','workHours','formName')
-
+    list_filter = ('formName','wbsNb__projectType','team__name')
     # fields = (
     # 'wbsNb__projectType','wbsNb__wbsNb','otherDepartement','wbsNb__description','taskDescription','startTime',
     # 'endTime','peopleNb','workHours')
@@ -74,7 +74,7 @@ class infoAdmin(admin.ModelAdmin):
 # Register your models here.
 class FormNameAdmin(admin.ModelAdmin):
     #listdisplay设置要显示在列表中的字段（id字段是Django模型的默认主键）
-    list_display = ('id','name')
+    list_display = ('id','name','workdays')
     #list_per_page设置每页显示多少条记录，默认是100条
     list_per_page = 10
     #ordering设置默认排序字段，负号表示降序排序
