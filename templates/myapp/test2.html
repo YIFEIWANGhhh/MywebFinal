@@ -330,8 +330,13 @@
         }
         $("#total_workhours").empty();
         $("#total_workhours").append(total_workhours);
+        //计算新填表中的人均工时
+        var new_team_peoplenb;
+        var new_workdays;
+        new_team_peoplenb = $("#team_peoplenb").val();
+        new_workdays = $("#workdays").val();
         $("#avg_workhours").empty();
-        $("#avg_workhours").append(total_workhours/8);
+        $("#avg_workhours").append((total_workhours/8/new_workdays/new_team_peoplenb).toFixed(2));
     }
     //-----------------根据选择的wbs编号，得到型号和任务描述，并填充--------
     $("select[name='wbsNb']").live('change',function(){
@@ -400,7 +405,7 @@
             }
         }
 
-        //计算总人工时
+        //计算数据库中总人工时
         var al_total_workhours = 0;
         for(var i = 0; i < get_data.length; i++){
             if(teamname == get_data[i].team){
@@ -410,13 +415,13 @@
         $("#al_total_workhours").empty();
         $("#al_total_workhours").append(al_total_workhours);
 
-        //计算人均工时
+        //计算数据库中人均工时
+        var team_peoplenb;
+        var workdays;
+        team_peoplenb = $("#team_peoplenb").val();
+        workdays = $("#workdays").val();
         $("#al_avg_workhours").empty();
-
-
-
-
-        $("#al_avg_workhours").append(al_total_workhours/8);
+        $("#al_avg_workhours").append((al_total_workhours/8/team_peoplenb/workdays).toFixed(2));
 
         //清空历史信息表
         $("#history_info  tr:not(:first)").empty("");
