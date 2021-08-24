@@ -21,5 +21,7 @@ urlpatterns = [
     path('edit/<str:info_id>', views.edit, name='edit'),
     path('edit_upload/', views.edit_upload, name='edit_upload'),
     path('edit_upload/return', views.editreturn, name='editreturn'),
-
+    # 汇总页面
+    path('summary/', views.summary, name='summary'),
+    path('summary_info/', views.summary_info, name='summary_info'),
 ]

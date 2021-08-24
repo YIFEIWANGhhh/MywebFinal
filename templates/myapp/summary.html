@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>汇总统计</title>
+    <link href="/static/bootstrap-table.css" rel="stylesheet">
+    <link href="/static/bootstrap.css" rel="stylesheet">
+    <script src="/static/jquery-1.8.2.min.js"></script>
+    <script src="/static/bootstrap.min.js"></script>
+    <script src="/static/bootstrap-table.js"></script>
+    <script src="/static/bootstrap-table-zh-CN.js"></script>
+</head>
+<body>
+  <table  id="summary_info" class="table table-striped table-bordered table-hover">
+    <thead>
+      <tr>
+        <td>季度选择</td>
+        <td>
+          <select id="summary_table_name">
+            <option>请选择</option>
+          </select>
+        </td>
+        <td>额定工作日</td><td><input type="number" name="summary_workdays" id="summary_workdays" disabled></td>
+      </tr>
+      <tr>
+        <th>团队</th>
+        <th>人数</th>
+        <th>工时合计</th>
+        <th>人均工时</th>
+        <th>比例</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>增材制造</td><td><input id="zengcai_team" disabled value="0" type="number"></td><td><input id="zengcai_workhours" disabled value="0"></td><td><input id="zengcai_avg_workhours" disabled value="0"></td><td><input id="zengcai_ratio_workhours" disabled value="0"></td></tr>
+      <tr><td>机械加工</td><td><input id="jijia_team" disabled value="0" type="number"></td><td><input id="jijia_workhours" disabled value="0"></td><td><input id="jijia_avg_workhours" disabled value="0"></td><td><input id="jijia_ratio_workhours" disabled value="0"></td></tr>
+      <tr><td>特种加工</td><td><input id="tezhong_team" disabled value="0" type="number"></td><td><input id="tezhong_workhours" disabled value="0"></td><td><input id="tezhong_avg_workhours" disabled value="0"></td><td><input id="tezhong_ratio_workhours" disabled value="0"></td></tr>
+      <tr><td>班组</td><td><input id="banzu_team" disabled value="0" type="number"></td><td><input id="banzu_workhours" disabled value="0"></td><td><input id="banzu_avg_workhours" disabled value="0"></td><td><input id="banzu_ratio_workhours" disabled value="0"></td></tr>
+      <tr><td>技术管理</td><td><input id="jiguan_team" disabled value="0" type="number"></td><td><input id="jiguan_workhours" disabled value="0"></td><td><input id="jiguan_avg_workhours" disabled value="0"></td><td><input id="jiguan_ratio_workhours" disabled value="0"></td></tr>
+      <tr><td>系统工程</td><td><input id="xitong_team" disabled value="0" type="number"></td><td><input id="xitong_workhours" disabled value="0"></td><td><input id="xitong_avg_workhours" disabled value="0"></td><td><input id="xitong_ratio_workhours" disabled value="0"></td></tr>
+      <tr><td>部门领导、助理</td><td><input id="leader_team" disabled value="4" type="number"></td><td><input id="leader_workhours" disabled value="0"></td><td><input id="leader_avg_workhours" disabled value="0"></td><td><input id="leader_ratio_workhours" disabled value="0"></td></tr>
+      <tr><td>总计</td><td><input id="summary_team" disabled value="0" type="number"></td><td><input id="summary_workhours" disabled value="0"></td><td><input id="summary_avg_workhours" disabled value="0"></td><td><input id="summary_ratio_workhours" disabled value="0"></td></tr>
+    </tbody>
+  </table>
+
+  <script type="text/javascript" language='javascript'>
+    var summary_formname;
+    var summary_data;
+    var summary_team_data;
+    $(function(){
+      //-----------------获取表名-------------------------------
+      $.ajax({
+        type:'get', //请求方式
+        url: '{% url "formname"  %}', //请求地址
+        dataType: 'json', //响应数据格式
+        async: false, //异步请求
+        success: function(res){   //请求成功后返回（响应）的回调函数
+          //alert(res['data'][0]['name']);
+          //alert(res);
+          list = res.data;
+          summary_formname = list;
+          for(var i = 0; i < list.length; i++){
+            //$("#nb0").append("<option value='"+list[i].name+"'>"+list[i].name+"</option>");
+            $("#summary_table_name").append("<option value='"+list[i].name+"'>"+list[i].name+"</option>");
+          }
+        },
+      });
+    })
+    $("#summary_table_name").live('change',function() {
+      var tablename = $("#summary_table_name").val();
+      //填充额定工作日
+      for (var i = 0; i < summary_formname.length; i++) {
+        if (summary_formname[i].name == tablename) {
+          $("#summary_workdays").empty();
+          $("#summary_workdays").val(summary_formname[i].workdays);
+        }
+      }
+      //获得当前表下的所有信息
+      $.ajax({
+        type: 'get', //请求方式
+        url: "/myapp/get_info/" + tablename, //请求地址
+        data: {},
+        dataType: 'json',
+        async: false, //异步请求
+        success: function (res) {
+          //获得部门info
+          list = res.data;
+          summary_data = list;
+        },
+      });
+      //得到统计值
+      var summary_workhours_z=0;
+      var summary_workhours_j=0;
+      var summary_workhours_t=0;
+      var summary_workhours_b=0;
+      var summary_workhours_x=0;
+      var summary_workhours_jg=0;
+      for(var i = 0; i < summary_data.length; i++){
+        if(summary_data[i].team == "增材制造"){
+
+          summary_workhours_z=summary_workhours_z + summary_data[i].peopleNb * summary_data[i].workhours;
+        }
+        if(summary_data[i].team == "机械加工"){
+          summary_workhours_j=summary_workhours_j + summary_data[i].peopleNb * summary_data[i].workhours;
+        }
+        if(summary_data[i].team == "特种加工"){
+          summary_workhours_t=summary_workhours_t + summary_data[i].peopleNb * summary_data[i].workhours;
+        }
+        if(summary_data[i].team == "系统工程"){
+          summary_workhours_x=summary_workhours_x + summary_data[i].peopleNb * summary_data[i].workhours;
+
+        }
+        if(summary_data[i].team == "技术管理"){
+          summary_workhours_jg=summary_workhours_jg + summary_data[i].peopleNb * summary_data[i].workhours;
+
+        }
+        if(summary_data[i].team == "班组"){
+          summary_workhours_b=summary_workhours_b + summary_data[i].peopleNb * summary_data[i].workhours;
+        }
+      }
+      $("#zengcai_workhours").val(summary_workhours_z);
+      $("#jijia_workhours").val(summary_workhours_j);
+      $("#xitong_workhours").val(summary_workhours_x);
+      $("#banzu_workhours").val(summary_workhours_b);
+      $("#jiguan_workhours").val(summary_workhours_jg);
+      $("#tezhong_workhours").val(summary_workhours_t);
+      //计算人均工时
+      $("#zengcai_avg_workhours").val((summary_workhours_z/$("#zengcai_team").val()).toFixed(4));
+      $("#jijia_avg_workhours").val((summary_workhours_j/$("#jijia_team").val()).toFixed(4));
+      $("#xitong_avg_workhours").val((summary_workhours_x/$("#xitong_team").val()).toFixed(4));
+      $("#banzu_avg_workhours").val((summary_workhours_b/$("#banzu_team").val()).toFixed(4));
+      $("#jiguan_avg_workhours").val((summary_workhours_jg/$("#jiguan_team").val()).toFixed(4));
+      $("#tezhong_avg_workhours").val((summary_workhours_t/$("#tezhong_team").val()).toFixed(4));
+      //计算比例
+      $("#zengcai_ratio_workhours").val((summary_workhours_z/$("#zengcai_team").val()/8/$("#summary_workdays").val()).toFixed(4));
+      $("#jijia_ratio_workhours").val((summary_workhours_j/$("#jijia_team").val()/8/$("#summary_workdays").val()).toFixed(4));
+      $("#xitong_ratio_workhours").val((summary_workhours_x/$("#xitong_team").val()/8/$("#summary_workdays").val()).toFixed(4));
+      $("#banzu_ratio_workhours").val((summary_workhours_b/$("#banzu_team").val()/8/$("#summary_workdays").val()).toFixed(4));
+      $("#jiguan_ratio_workhours").val((summary_workhours_jg/$("#jiguan_team").val()/8/$("#summary_workdays").val()).toFixed(4));
+      $("#tezhong_ratio_workhours").val((summary_workhours_t/$("#tezhong_team").val()/8/$("#summary_workdays").val()).toFixed(4));
+      //总计团队人数
+      var summary_teamnb= 0;
+      var temp1_zengcai =parseInt($("#zengcai_team").val());
+      var temp1_jijia =parseInt($("#jijia_team").val());
+      var temp1_banzu =parseInt($("#banzu_team").val());
+      var temp1_xitong =parseInt($("#xitong_team").val());
+      var temp1_tezhong =parseInt($("#tezhong_team").val());
+      var temp1_jiguan =parseInt($("#jiguan_team").val());
+      var temp1_leader =parseInt($("#leader_team").val());
+      summary_teamnb = temp1_zengcai+temp1_jijia+temp1_banzu+temp1_xitong+temp1_tezhong+temp1_jiguan+temp1_leader;
+      $("#summary_team").val(summary_teamnb);
+      //总计工时
+      var summary_workhours = 0;
+      var temp2_zengcai = parseInt($("#zengcai_workhours").val());
+      var temp2_jijia = parseInt($("#jijia_workhours").val());
+      var temp2_banzu = parseInt($("#banzu_workhours").val());
+      var temp2_xitong = parseInt($("#xitong_workhours").val());
+      var temp2_tezhong = parseInt($("#tezhong_workhours").val());
+      var temp2_jiguan = parseInt($("#jiguan_workhours").val());
+      var temp2_leader = parseInt($("#leader_workhours").val());
+      summary_workhours = temp2_zengcai+temp2_jijia+temp2_banzu+temp2_xitong+temp2_tezhong+temp2_jiguan+temp2_leader;
+      $("#summary_workhours").val(summary_workhours);
+      //总计人均工时
+      $("#summary_avg_workhours").val((summary_workhours/summary_teamnb).toFixed(4));
+      //总计比例
+      $("#summary_ratio_workhours").val((summary_workhours/summary_teamnb/8/$("#summary_workdays").val()).toFixed(4));
+    });
+
+    //获得各个团队的人数
+    $.ajax({
+      type:'get', //请求方式
+      url: '{% url "team"  %}', //请求地址
+      dataType: 'json', //响应数据格式
+      async: false, //异步请求
+      success: function(res){   //请求成功后返回（响应）的回调函数
+        list = res.data;
+        summary_team_data = list;
+        for(var i = 0; i < list.length; i++){
+            if(list[i].name == "增材制造"){
+              $("#zengcai_team").val(list[i].peoplenb);
+            }
+            if(list[i].name == "机械加工"){
+              $("#jijia_team").val(list[i].peoplenb);
+            }
+            if(list[i].name == "系统工程"){
+              $("#xitong_team").val(list[i].peoplenb);
+            }
+            if(list[i].name == "技术管理"){
+              $("#jiguan_team").val(list[i].peoplenb);
+            }
+            if(list[i].name == "特种加工"){
+              $("#tezhong_team").val(list[i].peoplenb);
+            }
+            if(list[i].name == "班组"){
+              $("#banzu_team").val(list[i].peoplenb);
+            }
+          }
+      },
+    });
+
+
+
+
+  </script>
+
+</body>
+</html>

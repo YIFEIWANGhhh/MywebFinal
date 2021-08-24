@@ -108,7 +108,6 @@ def test(request):
     return render(request,'myapp/test.html')
 
 def test2(request):
-    print("test2")
     return render(request,'myapp/test2.html')
 
 
@@ -255,3 +254,17 @@ def edit_upload(request):
 
 def editreturn(request):
     return  render(request, 'myapp/test2.html')
+
+
+def summary(request):
+    return render(request,'myapp/summary.html')
+def summary_info(request):
+    dlist = info.objects.all()
+    mylist = []
+    for ob in dlist:
+        mylist.append({'id': ob.id,'formName':ob.formName.name,
+                       'team':ob.team.name
+                       })
+    return JsonResponse({'data': mylist})
+
+
