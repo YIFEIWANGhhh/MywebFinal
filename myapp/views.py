@@ -258,13 +258,6 @@ def editreturn(request):
 
 def summary(request):
     return render(request,'myapp/summary.html')
-def summary_info(request):
-    dlist = info.objects.all()
-    mylist = []
-    for ob in dlist:
-        mylist.append({'id': ob.id,'formName':ob.formName.name,
-                       'team':ob.team.name
-                       })
-    return JsonResponse({'data': mylist})
+
 
 
