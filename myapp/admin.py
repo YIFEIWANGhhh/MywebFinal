@@ -5,7 +5,7 @@ from django.shortcuts import render,HttpResponse,redirect
 import xlwt
 import os
 from io import BytesIO
-
+admin.site.site_header = "人工时填报系统数据管理"
 class ExportExcelMixin(object):
 
     def export_as_excel(self, request, queryset):

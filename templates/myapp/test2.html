@@ -5,10 +5,26 @@
     <title>Title</title>
     <link href="/static/bootstrap-table.css" rel="stylesheet">
     <link href="/static/bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/bootstrap-select.min.css/" />
+
     <script src="/static/jquery-1.8.2.min.js"></script>
     <script src="/static/bootstrap.min.js"></script>
     <script src="/static/bootstrap-table.js"></script>
     <script src="/static/bootstrap-table-zh-CN.js"></script>
+    <script src="/static/bootstrap-select.js"></script>
+
+
+
+<!--    <script src="https://code.jquery.com/jquery-migrate-3.0.1.min.js"></script>-->
+    <!--    <script src="http://code.jquery.com/jquery-1.9.0.min.js"></script>-->
+    <!--    <script src="/static/jquery-3.4.1.js"></script>-->
+    <!--    <script src="/static/jquery-1.9.1.min.js"></script>-->
+
+
+<!--    <script src="/static/select2.full.js"></script>-->
+<!--    <link href="/static/select2.css" rel="stylesheet">-->
+
+
 </head>
 <body>
     <div class="container-fluid text-center center-block">
@@ -133,10 +149,12 @@
 
             <td>
                 <select id="wbsNb0" name="wbsNb" class="form-control">
-                </select>
+<!--                <select id="wbsNb0" name="wbsNb" class="form-control selectpicker" data-live-search = "true">-->
+                 </select>
             </td>
             <td>
                 <select id="otherdepartement0" name="otherdepartement" class="form-control">
+<!--                <select id="otherdepartement0" name="otherdepartement" class="form-control selectpicker" data-live-search = "true">-->
                     <option value=" ">请选择</option>
                     <option value="装配中心">装配中心</option>
                     <option value="试验验证中心">试验验证中心</option>
@@ -187,6 +205,7 @@
     var formname_data;
     var team_data;
     $(function(){
+
         //-----------------获取团队名-------------------------------
         $.ajax({
             type:'get', //请求方式
@@ -214,7 +233,11 @@
                 list = res.data
                 for(var i = 0; i < list.length; i++){
                     $("#wbsNb0").append("<option value='"+list[i].wbsNb+"'>"+list[i].wbsNb+"</option>");
+                    //$(".selectpicker").append("<option value='"+list[i].wbsNb+"'>"+list[i].wbsNb+"</option>");
+
                 }
+                // $("#wbsNb0").selectpicker('refresh')
+                // $("#wbsNb0").selectpicker('render')
             },
         });
         //-----------------获取表名-------------------------------
@@ -315,9 +338,9 @@
                 $(this).children().each(function (j) {
 
                     if ($("#info_table tr").eq(i).children().length -1 != j) {
-                        value += $(this).children().eq(0).val() + "," //获取每个单元格里的第一个控件的值
+                        value += $(this).children().eq(0).val() + ","; //获取每个单元格里的第一个控件的值
                         if ($(this).children().length > 1) {
-                            value += $(this).children().eq(1).val() + "," //如果单元格里有两个控件，获取第二个控件的值
+                            value += $(this).children().eq(1).val() + ","; //如果单元格里有两个控件，获取第二个控件的值
                         }
                     }
                 });
@@ -347,7 +370,9 @@
         $("#avg_workhours").empty();
         $("#avg_workhours").append((total_workhours/8/new_workdays/new_team_peoplenb).toFixed(2));
     }
+
     //-----------------根据选择的wbs编号，得到型号和任务描述，并填充--------
+    //$("select[name='wbsNb']").on('change',function(){
     $("select[name='wbsNb']").live('change',function(){
         //alert(flag)
         var wbsnb = $(this).val();
@@ -371,6 +396,7 @@
 
 
     //-------------------获得指定表名的一些信息-----------------------------
+    //$("#table_name").on('change',function() {
     $("#table_name").live('change',function() {
         var tablename = $("#table_name").val();
 
@@ -400,6 +426,7 @@
     });
     //-------------------根据选择的表以及团队计算数据库中信息的总人工时和人均人工时并得到历史数据-----------------------------
     $("#team_name").live('change',function() {
+    //$("#team_name").on('change',function() {
         //-------------------计算总人工时和人均人工时-----------------------------
         var teamname = $("#team_name").val();
 
@@ -450,12 +477,12 @@
     });
     //-------------------计算每一行的合计工时-----------------------------
     $("[name='workhours']").live('change',function() {
+    //$("[name='workhours']").on('change',function() {
         var people = $(this).parent().prev().children().val();
         var h = $(this).val();
         var current_id = $(this).attr("id").match(/[0-9]+/);
         $("#one_workhours"+current_id).empty();
         $("#one_workhours"+current_id).val(people * h);
-
     });
 
 </script>
@@ -537,8 +564,7 @@
                 }
             })
         }
-    })
-
+    });
 </script>
 
 
