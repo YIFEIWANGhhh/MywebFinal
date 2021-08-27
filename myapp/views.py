@@ -187,7 +187,7 @@ def uploadtest2(request):
             projecttype = j[1]
             team = j[2]
             formname = j[0]
-            #print(projecttype,team,wbs,otherdepartement,description,content,start_time,end_time,peoplenb,workhours,remark)
+            # print(projecttype,team,wbs,otherdepartement,description,content,start_time,end_time,peoplenb,workhours,remark)
             insert_info(team,formname,wbs,peoplenb,workhours,start_time,end_time,content,otherdepartement,remark)
     return render(request,'myapp/test2.html')
 
