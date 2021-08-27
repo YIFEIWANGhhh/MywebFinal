@@ -11,7 +11,7 @@ class Team(models.Model):
 
 class Task(models.Model):
     id = models.AutoField(primary_key=True)
-    wbsNb = models.CharField("WBS/WP编号", max_length=255)
+    wbsNb = models.CharField("WBS/WP编号", max_length=255,unique=True)
     description = models.CharField("任务内容", max_length=255)
     projectType = models.CharField("型号", max_length=255)
     def __str__(self):
